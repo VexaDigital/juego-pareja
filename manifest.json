@@ -25,6 +25,7 @@
       "form_factor": "wide"
     }
   ]
+    "categories": ["games", "entertainment", "lifestyle"]
     {
       "src": "./512.png",
       "sizes": "512x512",
