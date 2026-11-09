@@ -1,25 +1,35 @@
 {
-  "background_color": "#000000",
-  "description": "¿Listos para subir de nivel su relación? Descubre retos divertidos, preguntas picantes y dinámicas únicas diseñadas para parejas. ¡Risas, complicidad y momentos inolvidables garantizados!",
-  "dir": "ltr",
-  "display": "standalone",
-  "name": "Juego Pareja: Retos y Amor",
-  "orientation": "any",
-  "scope": "./",
-  "short_name": "Juego Pareja",
-  "start_url": "./",
-  "theme_color": "#000000",
   "id": "com.vexadigital.juegopareja",
+  "name": "Juego Pareja: Retos y Amor",
+  "short_name": "Juego Pareja",
+  "description": "¿Listos para subir de nivel su relación? Descubre retos divertidos, preguntas picantes y dinámicas únicas diseñadas para parejas. ¡Risas, complicidad y momentos inolvidables garantizados!",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "orientation": "any",
+  "dir": "ltr",
   "icons": [
     {
       "src": "./icons/icon-192x192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
       "src": "./icons/icon-512x512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "./icons/screenshot1.png",
+      "sizes": "540x720",
+      "type": "image/png",
+      "form_factor": "narrow"
     }
   ]
 }
