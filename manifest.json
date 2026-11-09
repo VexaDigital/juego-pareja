@@ -10,6 +10,7 @@
   "theme_color": "#000000",
   "orientation": "any",
   "dir": "ltr",
+  "categories": ["games", "entertainment", "lifestyle"],
   "icons": [
     {
       "src": "./192.png",
@@ -17,20 +18,19 @@
       "type": "image/png",
       "purpose": "any maskable"
     },
-    "screenshots": [
-    {
-      "src": "./1024.png",
-      "sizes": "1024x1024",
-      "type": "image/png",
-      "form_factor": "wide"
-    }
-  ]
-    "categories": ["games", "entertainment", "lifestyle"]
     {
       "src": "./512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "./1024.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "form_factor": "wide"
     }
   ]
 }
