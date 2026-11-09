@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    
+    <!-- TÍTULO DE LA PESTAÑA -->
+    <title>🔥 JUEGO SUCIO : EXTREME 🔥</title>
+
+    <!-- ETIQUETAS OPEN GRAPH (Para que WhatsApp lea el nombre correcto al compartir el link) -->
+    <meta property="og:title" content="🔥 JUEGO SUCIO : EXTREME 🔥">
+    <meta property="og:description" content="Juego interactivo de retos y dinámicas de pareja.">
+    <meta property="og:type" content="website">
+
+    <style>
+        :root { 
+            --accent: #00f2ff; --bg: #050505; --card-bg: #111;
+            --gold: #ffd700; --deep-red: #ff0033; --purple: #a020f0; --pink: #ff1493; --green: #2ecc71;
+        }
+        * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
+        body { 
+            margin: 0; 
+            font-family: -apple-system, system-ui, sans-serif; 
+            background: var(--bg); 
+            color: white; 
+            min-height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+            overflow-y: auto; 
+            overflow-x: hidden; 
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        /* MODAL DE CONFIGURACIÓN DE NOMBRES */
+        .setup-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(5, 5, 5, 0.98); z-index: 200;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            padding: 25px; text-align: center;
+        }
+        .setup-modal h2 { color: var(--accent); margin-bottom: 20px; font-size: 24px; letter-spacing: 1px; }
+        .input-group { width: 100%; max-width: 320px; margin-bottom: 15px; text-align: left; }
+        .input-group label { font-size: 12px; color: #aaa; font-weight: bold; margin-bottom: 5px; display: block; }
+        .input-group input {
+            width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #333;
+            background: #151515; color: white; font-size: 16px; font-weight: bold; outline: none;
+        }
+        .input-group input:focus { border-color: var(--accent); }
+
+        .header { 
+            padding: 45px 20px 15px; background: rgba(0,0,0,0.95); 
+            border-bottom: 2px solid var(--deep-red); position: fixed; top: 0; width: 100%; z-index: 100;
+        }
+        .content { 
+            flex: 1; margin-top: 100px; margin-bottom: 85px; 
+            overflow-y: auto; -webkit-overflow-scrolling: touch;
+            padding: 20px; display: flex; flex-direction: column; align-items: center;
+        }
+        
+        /* ANIMACIONES DE IMPACTO */
+        @keyframes glow {
+            0% { box-shadow: 0 0 5px var(--glow-color); }
+            50% { box-shadow: 0 0 20px var(--glow-color); }
+            100% { box-shadow: 0 0 5px var(--glow-color); }
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(40px) scale(0.9); filter: blur(10px); }
+            to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+        }
+
+        .visual-container { position: relative; height: 140px; display: flex; align-items: center; justify-content: center; width: 100%; }
+        .particle { position: absolute; pointer-events: none; border-radius: 50%; opacity: 0; }
+
+        .icon-circle { 
+            width: 85px; height: 85px; border-radius: 50%; border: 2px solid var(--accent);
+            display: flex; align-items: center; justify-content: center; font-size: 40px;
+            background: radial-gradient(circle, rgba(0,242,255,0.1) 0%, transparent 70%);
+            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .ruleta-box { display: none; position: relative; width: 140px; height: 140px; }
+        #wheel { 
+            width: 100%; height: 100%; border-radius: 50%; border: 4px solid white;
+            transition: transform 3.5s cubic-bezier(0.15, 0, 0.15, 1);
+            background: conic-gradient(#3498db 0% 50%, var(--pink) 50% 100%);
+        }
+
+        #timer { font-size: 50px; font-weight: 900; margin: 5px 0; font-family: monospace; text-shadow: 0 0 10px var(--accent); }
+        .btn { width: 100%; max-width: 320px; padding: 18px; border: none; border-radius: 20px; font-size: 16px; font-weight: 800; color: white; margin-bottom: 10px; transition: 0.2s; cursor: pointer; }
+        .btn:active { transform: scale(0.95); opacity: 0.9; }
+        .btn-main { background: linear-gradient(45deg, var(--deep-red), var(--purple)); box-shadow: 0 4px 15px rgba(255,0,51,0.3); }
+        .btn-start { background: var(--green); display: none; box-shadow: 0 0 15px var(--green); }
+
+        .card { 
+            background: var(--card-bg); border-left: 6px solid var(--accent); padding: 20px; 
+            border-radius: 18px; text-align: left; width: 100%; max-width: 400px; margin-top: 15px;
+            animation: slideUp 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards, glow 3s infinite;
+            --glow-color: var(--accent);
+        }
+
+        .card-t { font-size: 18px; font-weight: 900; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; }
+        .role-p { color: #5dade2; margin-top: 10px; font-size: 14px; border-bottom: 1px solid #222; padding-bottom: 10px; line-height: 1.4; }
+        .role-f { color: #ec7063; margin-top: 10px; font-size: 14px; line-height: 1.4; }
+
+        .nav-bar { 
+            position: fixed; bottom: 0; width: 100%; height: 85px; background: #000;
+            display: flex; justify-content: space-around; border-top: 1px solid #222; z-index: 100;
+        }
+        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 10px; color: #444; transition: 0.3s; }
+        .nav-item.active { color: var(--accent); transform: translateY(-3px); }
+        .nav-item span { font-size: 24px; margin-bottom: 3px; }
+    </style>
+</head>
+<body>
+
+    <!-- MODAL DE CONFIGURACIÓN -->
+    <div class="setup-modal" id="setupModal">
+        <h2>🔥 NOMBRES DE LA PAREJA 🔥</h2>
+        <div class="input-group">
+            <label for="inputHombre">NOMBRE DEL ÉL (HOMBRE):</label>
+            <input type="text" id="inputHombre" placeholder="Ej.HOMBRE " value="Él">
+        </div>
+        <div class="input-group">
+            <label for="inputMujer">NOMBRE DE ELLA (MUJER):</label>
+            <input type="text" id="inputMujer" placeholder="Ej. MUJER" value="Ella">
+        </div>
+        <button class="btn btn-main" style="margin-top: 15px;" onclick="iniciarJuego()">🎮 COMENZAR JUEGO</button>
+    </div>
+
+    <div class="header">
+        <h1 id="header-title" style="text-align:center; font-size:18px; margin:0; letter-spacing: 2px;">JUEGO DE PAREJA EXTREME</h1>
+        <div id="fase-tag" style="text-align:center; font-size:10px; color:var(--accent); font-weight: bold;">MODO: PREPARACIÓN</div>
+    </div>
+
+    <div class="content">
+        <div class="visual-container" id="v-cont">
+            <div class="icon-circle" id="mode-icon">🔥</div>
+            <div class="ruleta-box" id="ruleta-ui">
+                <div id="wheel"></div>
+            </div>
+        </div>
+
+        <div id="action-area" style="width:100%; display:flex; flex-direction:column; align-items:center;"></div>
+        <div id="timer">00:00</div>
+        <button id="btn-timer" class="btn btn-start" onclick="activarReloj()">▶️ EMPEZAR AHORA</button>
+        <div id="resultado"></div>
+    </div>
+
+    <div class="nav-bar">
+        <div class="nav-item active" onclick="setModo('escalada', this)"><span>🔥</span>ESCALADA</div>
+        <div class="nav-item" onclick="setModo('desafio', this)"><span>😈</span>RETOS</div>
+        <div class="nav-item" onclick="setModo('combinados', this)"><span>🎲</span>DADOS</div>
+        <div class="nav-item" onclick="setModo('ruleta', this)"><span>🎡</span>RULETA</div>
+    </div>
+
+<script>
+    let nivel = 1; let clicksNivel = 0; let timerInterval; let segundosPendientes = 0; let rotation = 0;
+    
+    // NOMBRES DINÁMICOS
+    let nombreHombre = "Él";
+    let nombreMujer = "Ella";
+
+    function iniciarJuego() {
+        const valHombre = document.getElementById('inputHombre').value.trim();
+        const valMujer = document.getElementById('inputMujer').value.trim();
+        
+        if (valHombre !== "") nombreHombre = valHombre;
+        if (valMujer !== "") nombreMujer = valMujer;
+
+        document.getElementById('header-title').innerText = `${nombreHombre.toUpperCase()} & ${nombreMujer.toUpperCase()}`;
+        document.getElementById('setupModal').style.display = "none";
+
+        // Activar síntesis de voz vacía para desbloquear el audio en iOS/Android
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.speak(new SpeechSynthesisUtterance(""));
+        }
+    }
+
+    // --- PLANTILLAS DE ACCIONES (Usa {h} para Hombre y {m} para Mujer) ---
+    const accionesBase = {
+        fase1: [
+            { t: "MASAJE CON LENGUA", d: "Exploración sensorial de la espalda.", p: "{m} boca abajo. Lame desde su nuca hasta el coxis.", f: "Mantén los brazos estirados hacia adelante y arquea la espalda.", s: 120 },
+            { t: "SUCCIÓN DE PEZONES", d: "Estimulación de puntos altos.", p: "Succiona un pezón con suavidad mientras masajeas el otro.", f: "Cruza tus piernas sobre la espalda de {h} y estimúlalo.", s: 180 },
+            { t: "DEDOS EXPLORADORES (PUNTO G)", d: "Búsqueda del placer interno.", p: "Introduce dos dedos con la palma hacia arriba. Movimiento 'ven aquí'.", f: "Aprieta tus músculos vaginales sobre sus dedos.", s: 240 },
+            { t: "MORDISCO EN MUSLOS", d: "Apertura y control.", p: "Sujeta sus rodillas y ábrelas. Da mordiscos firmes en la cara interna.", f: "Agárrate de las sábanas y mantén el contacto visual.", s: 120 },
+            { t: "LENGUA MARIPOSA", d: "Roce externo ultra sensible.", p: "Usa la punta de tu lengua solo en el clítoris, movimientos rápidos.", f: "Guía la cabeza de {h} con tus manos.", s: 150 }
+        ],
+        fase2: [
+            { t: "PERRITO DE RODILLAS", d: "Penetración profunda y animal.", p: "Arrodillado erguido. Penétrala con empujes largos.", f: "Apoya los codos y sube el trasero lo más que puedas.", s: 180 },
+            { t: "MISIONERO ELEVADO", d: "Conexión total y visual.", p: "Sujeta sus tobillos y súbelos hasta que sus rodillas queden cerca de sus orejas.", f: "Pon almohadas bajo tu cadera y gime cerca de su oído.", s: 240 },
+            { t: "LA SILLA CABALGANTE", d: "Ella toma las riendas.", p: "Siéntate en el borde. Sujeta su cintura para el equilibrio.", f: "Siéntate sobre él de frente y sube y baja con tu peso.", s: 180 },
+            { t: "CUCHARITA PROFUNDA", d: "Intimidad piel con piel.", p: "Ambos de lado. Entra por detrás muy despacio.", f: "Empuja tu cadera hacia atrás rítmicamente.", s: 200 }
+        ],
+        fase3: [
+            { t: "EL MOLINILLO", d: "Giro y profundidad máxima.", p: "Sujeta sus nalgas con fuerza y entra con potencia.", f: "Intenta rotar tu cadera en círculos mientras él está adentro.", s: 300 },
+            { t: "CLÍMAX LIBRE", d: "Final explosivo.", p: "Busca tu final con intensidad en la posición que más te excite.", f: "No te guardes nada. Grita y disfruta el final.", s: 600 }
+        ]
+    };
+
+    const retosBase = [
+        { t: "EL 69", d: "Placer dual invertido.", p: "Acuéstate boca arriba para recibirla.", f: "Colócate sobre él al revés. Trabajen juntos.", s: 180 },
+        { t: "MISIONERO: TOBILLOS AL HOMBRO", d: "Ángulo de penetración extrema.", p: "Sube sus pies hasta tus hombros para entrar más profundo.", f: "Levanta la pelvis para recibir cada embestida.", s: 150 },
+        { t: "LA POSICIÓN 'W'", d: "Apertura total de caderas.", p: "Penétrala mientras ella dobla sus rodillas hacia afuera.", f: "Piernas abiertas en W, camino libre.", s: 150 },
+        { t: "LA FUSIÓN", d: "Sexo sentado con cercanía total.", p: "Siéntate con las piernas cruzadas y ella sobre tu regazo.", f: "Abrázalo por el cuello y muévete.", s: 180 },
+        { t: "VAQUERA EN CUCLILLAS", d: "Control total de {m}.", p: "Acostado. Manos en sus caderas para ayudarla.", f: "Ponte en cuclillas sobre él, subiendo y bajando rápido.", s: 150 },
+        { t: "VAQUERA INVERTIDA", d: "Placer visual.", p: "Disfruta el espectáculo de su espalda arqueándose.", f: "De espaldas a {h}, inclina tu cuerpo adelante.", s: 150 },
+        { t: "GARGANTA PROFUNDA (RETO)", d: "Entrega total oral.", p: "Quédate quieto y deja que ella decida.", f: "Introduce su miembro lo más profundo posible.", s: 120 },
+        { t: "RESISTENCIA ({m})", d: "Reto de aguante sensorial.", p: "Lame su clítoris con velocidad constante.", f: "No cierres las piernas. Aguanta sin moverte.", s: 120 },
+        { t: "POSICIÓN MOSTRADOR EXTREMA", d: "Sexo en la superficie alta.", p: "Cárgala y siéntala en el mostrador o mesa con fuerza.", f: "Cruza tus piernas con fuerza en su espalda.", s: 60 },
+        { t: "TRABALENGUAS PENETRADA", d: "Mente vs Cuerpo.", p: "Dale con tu máximo ritmo en perrito.", f: "Di 'Tres tristes tigres' sin equivocarte.", s: 60 },
+        { t: "TODO ADENTRO (ORDEÑO)", d: "Succión vaginal.", p: "Introduce todo y quédate 100% inmóvil.", f: "Intenta 'ordeñarlo' con tus músculos internos.", s: 90 },
+        { t: "NALGADAS RÍTMICAS", d: "Estímulo sonoro.", p: "Da una nalgada fuerte cada vez que entres al fondo.", f: "Cuenta las nalgadas en voz alta.", s: 150 },
+        { t: "EL MUÑECO DE TRAPO", d: "{h} toma el mando.", p: "Levántala contra la pared y penétrala.", f: "Sujétate de su cuello con fuerza.", s: 120 },
+        { t: "SUMISIÓN: BOCA ABAJO", d: "Control total de {h}.", p: "Ponla boca abajo. 10 nalgadas y entra sin avisar.", f: "Cara contra la almohada. Acepta su ritmo.", s: 180 },
+        { t: "SILLA: EL CABALLITO", d: "Vaquera rítmica.", p: "Siéntate en una silla firme.", f: "Siéntate sobre él mirando hacia adelante y rebota.", s: 150 },
+        { t: "RESISTENCIA FINAL", d: "Velocidad máxima.", p: "Dale a máxima velocidad por 2 minutos sin parar.", f: "Piernas abiertas al máximo.", s: 120 }
+    ];
+
+    const castigosPBase = [
+        { t: "CASTIGO {h}", d: "Esclavo del clítoris.", p: "Solo lengua y labios en círculos rápidos. Manos atrás.", f: "Siéntate en su cara y manda el ritmo.", s: 300 },
+        { t: "EL SILENCIADOR", d: "Control de voz.", p: "Tápale la boca con tu mano o una prenda mientras la embistes con fuerza bruta.", f: "Gime contra su palma. Si haces ruido, {h} te da 5 nalgadas.", s: 180 },
+        { t: "PERRITO CIEGO", d: "Privación sensorial.", p: "Tápale los ojos a {m}. Penétrala con ritmo errático: a veces lento, a veces salvaje.", f: "Con los ojos vendados, intenta adivinar la próxima embestida.", s: 180 },
+        { t: "ESTATUA DE PLACER", d: "Inmovilidad.", p: "Hazle lo que quieras: besos, mordiscos, caricias.", f: "No puedes moverte ni gemir. Si lo haces, el tiempo se reinicia.", s: 180 }
+    ];
+
+    const castigosFBase = [
+        { t: "CASTIGO {m}", d: "Sometimiento oral.", p: "Termina sobre su cara.", f: "No te limpies hasta que él lo diga.", s: 300 },
+        { t: "OXÍGENO COMPARTIDO", d: "Besos de asfixia.", p: "Bésala sin soltarla ni un segundo mientras la penetras a tu máximo ritmo.", f: "Intenta respirar solo a través de sus labios. No te separes de su boca.", s: 120 },
+        { t: "EL SILENCIADOR", d: "Control de voz.", p: "Controla su voz con tu mano. Si gime muy fuerte, dale 5 nalgadas.", f: "Gime contra su palma e intenta mantener el silencio bajo su mando.", s: 180 },
+        { t: "ESTATUA DE PLACER", d: "Inmovilidad.", p: "Penétrala o elígela a tu gusto. Tienes el control total.", f: "Prohibido moverse o gemir mientras él te usa a su antojo.", s: 180 }
+    ];
+
+    const intensidades = [
+        "con fuerza bruta ", 
+        "con lentitud torturante ", 
+        "rápido y desesperado ", 
+        "marcando el ritmo con nalgadas "
+    ];
+
+    // FUNCIÓN PARA REEMPLAZAR NOMBRES EN TEXTO
+    function procesarTexto(str) {
+        return str.replace(/{h}/g, nombreHombre).replace(/{m}/g, nombreMujer);
+    }
+
+    // --- VOZ INTELIGENTE ---
+    function hablar(item) {
+        if (!('speechSynthesis' in window)) return;
+        window.speechSynthesis.cancel();
+
+        const texto = `${item.t}. ${nombreHombre}: ${item.p.split('.')[0]}. ${nombreMujer}: ${item.f.split('.')[0]}.`;
+        
+        const msg = new SpeechSynthesisUtterance(texto);
+        msg.lang = 'es-MX';
+        msg.rate = 0.9;
+        msg.pitch = 0.9;
+        
+        window.speechSynthesis.speak(msg);
+    }
+
+    function burst(color) {
+        const cont = document.getElementById('v-cont');
+        for (let i = 0; i < 15; i++) {
+            const p = document.createElement('div');
+            p.classList.add('particle');
+            p.style.backgroundColor = color;
+            p.style.width = '6px'; p.style.height = '6px';
+            p.style.left = '50%'; p.style.top = '50%';
+            cont.appendChild(p);
+            const angle = Math.random() * Math.PI * 2;
+            const dist = Math.random() * 80 + 30;
+            p.animate([
+                { transform: 'translate(-50%, -50%) scale(1)', opacity: 1 },
+                { transform: `translate(calc(-50% + ${Math.cos(angle)*dist}px), calc(-50% + ${Math.sin(angle)*dist}px)) scale(0)`, opacity: 0 }
+            ], { duration: 700 }).onfinish = () => p.remove();
+        }
+    }
+
+    function mostrar(itemOriginal, color) {
+        const item = {
+            t: procesarTexto(itemOriginal.t),
+            d: procesarTexto(itemOriginal.d),
+            p: procesarTexto(itemOriginal.p),
+            f: procesarTexto(itemOriginal.f),
+            s: itemOriginal.s
+        };
+
+        segundosPendientes = item.s;
+        document.getElementById('resultado').innerHTML = `
+            <div class="card" style="border-left-color:${color}; --glow-color:${color}">
+                <div class="card-t" style="color:${color}">${item.t}</div>
+                <div style="font-size:11px; color:#888; margin-bottom:8px; font-weight:bold;">${item.d}</div>
+                <div class="role-p"><b>♂ ${nombreHombre.toUpperCase()}:</b> ${item.p}</div>
+                <div class="role-f"><b>♀ ${nombreMujer.toUpperCase()}:</b> ${item.f}</div>
+            </div>`;
+        document.getElementById('btn-timer').style.display = "block";
+        hablar(item);
+    }
+
+    function jugar() {
+        resetTodo(); burst('var(--accent)');
+        clicksNivel++; if(clicksNivel > 4) { nivel++; clicksNivel = 0; if(nivel>3) nivel=3; }
+        let lista = nivel == 1 ? accionesBase.fase1 : (nivel == 2 ? accionesBase.fase2 : accionesBase.fase3);
+        mostrar(lista[Math.floor(Math.random() * lista.length)], 'var(--accent)');
+        document.getElementById('fase-tag').innerText = "NIVEL " + nivel;
+    }
+
+    function lanzarReto() {
+        resetTodo(); burst('var(--gold)');
+        mostrar(retosBase[Math.floor(Math.random() * retosBase.length)], 'var(--gold)');
+    }
+
+    function lanzarDados() {
+        resetTodo(); 
+        burst('var(--purple)');
+        
+        const movimientos = [
+            "Penetración profunda y constante, ",
+            "Embestidas cortas y rápidas sin salir, ",
+            "Entra y sale por completo en cada movimiento, ",
+            "Círculos con la cadera mientras estás adentro, ",
+            "Tres empujes lentos y uno fuerte al fondo, ",
+            "Cárgala contra la pared y mantén el ritmo, ",
+            "Apóyala en los bordes y entra con todo, ",
+            "Sujeta sus nalgas y sacúdela con cada golpe, ",
+            "Penetración lateral (cucharita) muy rítmica, ",
+            "Ritmo errático: cambia de velocidad cada 10 segundos, "
+        ];
+
+        const mov = movimientos[Math.floor(Math.random() * movimientos.length)];
+        const int = intensidades[Math.floor(Math.random() * intensidades.length)];
+        
+        const item = { 
+            t: "DADOS MIXTOS", 
+            d: "COMBINACIÓN SALVAJE", 
+            p: mov + int.toUpperCase(), 
+            f: "Arquea la espalda, gime fuerte y guía su cadera.", 
+            s: 180 
+        };
+
+        mostrar(item, 'var(--purple)');
+    }
+
+    function girarRuleta() {
+        resetTodo();
+        
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.speak(new SpeechSynthesisUtterance(""));
+        }
+
+        const wheel = document.getElementById('wheel');
+        const extraDeg = Math.floor(Math.random() * 360) + 1440;
+        rotation += extraDeg;
+        wheel.style.transform = `rotate(${rotation}deg)`;
+
+        setTimeout(() => {
+            let finalDeg = rotation % 360;
+            let quien = (finalDeg <= 180) ? "HOMBRE" : "MUJER";
+            
+            const lista = (quien === "HOMBRE") ? castigosPBase : castigosFBase;
+            const castigoAzar = lista[Math.floor(Math.random() * lista.length)];
+
+            burst(quien === "HOMBRE" ? '#3498db' : 'var(--pink)');
+            mostrar(castigoAzar, (quien === "HOMBRE" ? '#3498db' : 'var(--pink)'));
+        }, 3500);
+    }
+
+    function setModo(modo, el) {
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        el.classList.add('active');
+        resetTodo();
+        const icon = document.getElementById('mode-icon');
+        const ruleta = document.getElementById('ruleta-ui');
+        const area = document.getElementById('action-area');
+        if(modo === 'escalada') {
+            icon.style.display="flex"; ruleta.style.display="none"; icon.innerText="🔥";
+            area.innerHTML = '<button class="btn btn-main" onclick="jugar()">🔥 SIGUIENTE PASO</button>';
+        } else if(modo === 'desafio') {
+            icon.style.display="flex"; ruleta.style.display="none"; icon.innerText="😈";
+            area.innerHTML = '<button class="btn btn-main" style="background:var(--gold);color:black" onclick="lanzarReto()">😈 OTRO RETO</button>';
+        } else if(modo === 'combinados') {
+            icon.style.display="flex"; ruleta.style.display="none"; icon.innerText="🎲";
+            area.innerHTML = '<button class="btn btn-main" style="background:var(--purple)" onclick="lanzarDados()">🎲 NUEVA MEZCLA</button>';
+        } else {
+            icon.style.display="none"; ruleta.style.display="block";
+            area.innerHTML = '<button class="btn btn-main" style="background:var(--pink)" onclick="girarRuleta()">🎡 GIRAR RULETA</button>';
+        }
+    }
+
+    function resetTodo() {
+        clearInterval(timerInterval);
+        document.getElementById('timer').innerText = "00:00";
+        document.getElementById('btn-timer').style.display = "none";
+        document.getElementById('resultado').innerHTML = "";
+    }
+
+    function activarReloj() {
+        document.getElementById('btn-timer').style.display = "none";
+        let s = segundosPendientes;
+        timerInterval = setInterval(() => {
+            let m = Math.floor(s/60); let r = s%60;
+            document.getElementById('timer').innerText = `${m}:${r<10?'0':''}${r}`;
+            
+            if(s-- <= 0) {
+                clearInterval(timerInterval);
+                document.getElementById('timer').innerText = "¡CAMBIO!";
+                
+                if ("vibrate" in navigator) {
+                    navigator.vibrate([500, 200, 500]);
+                }
+                
+                if ('speechSynthesis' in window) {
+                    window.speechSynthesis.speak(new SpeechSynthesisUtterance("Tiempo fuera. Siguiente acción."));
+                }
+            }
+        }, 1000);
+    }
+
+    setModo('escalada', document.querySelector('.nav-item'));
+</script>
+</body>
+</html>
