@@ -5,9 +5,9 @@
   "display": "standalone",
   "name": "Juego Pareja: Retos y Amor",
   "orientation": "any",
-  "scope": "/",
+  "scope": "/juego-pareja/",
   "short_name": "Juego Pareja",
-  "start_url": "/",
+  "start_url": "/juego-pareja/"
   "theme_color": "#ffffff",
   "id": "com.vexadigital.juegopareja"
 }
