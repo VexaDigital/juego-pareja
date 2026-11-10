@@ -7,7 +7,7 @@
     <!-- TÍTULO DE LA PESTAÑA -->
     <title>🔥 JUEGO SUCIO : EXTREME 🔥</title>
 
-    <!-- ETIQUETAS OPEN GRAPH (Para que WhatsApp lea el nombre correcto al compartir el link) -->
+    <!-- ETIQUETAS OPEN GRAPH -->
     <meta property="og:title" content="🔥 JUEGO SUCIO : EXTREME 🔥">
     <meta property="og:description" content="Juego interactivo de retos y dinámicas de pareja.">
     <meta property="og:type" content="website">
@@ -125,7 +125,8 @@
             <label for="inputMujer">NOMBRE DE ELLA (MUJER):</label>
             <input type="text" id="inputMujer" placeholder="Ej. MUJER" value="Ella">
         </div>
-        <button class="btn btn-main" style="margin-top: 15px;" onclick="iniciarJuego()">🎮 COMENZAR JUEGO</button>
+        <!-- BOTÓN CON SMART LINK INTEGRADO (Reemplaza 'https://TU_ENLACE_DIRECTO_DE_ADSTERRA_AQUI' con tu enlace real) -->
+        <button class="btn btn-main" style="margin-top: 15px;" onclick="window.open('https://TU_ENLACE_DIRECTO_DE_ADSTERRA_AQUI', '_blank'); iniciarJuego();">🎮 COMENZAR JUEGO</button>
     </div>
 
     <div class="header">
@@ -171,13 +172,11 @@
         document.getElementById('header-title').innerText = `${nombreHombre.toUpperCase()} & ${nombreMujer.toUpperCase()}`;
         document.getElementById('setupModal').style.display = "none";
 
-        // Activar síntesis de voz vacía para desbloquear el audio en iOS/Android
         if ('speechSynthesis' in window) {
             window.speechSynthesis.speak(new SpeechSynthesisUtterance(""));
         }
     }
 
-    // --- PLANTILLAS DE ACCIONES (Usa {h} para Hombre y {m} para Mujer) ---
     const accionesBase = {
         fase1: [
             { t: "MASAJE CON LENGUA", d: "Exploración sensorial de la espalda.", p: "{m} boca abajo. Lame desde su nuca hasta el coxis.", f: "Mantén los brazos estirados hacia adelante y arquea la espalda.", s: 120 },
@@ -238,23 +237,18 @@
         "marcando el ritmo con nalgadas "
     ];
 
-    // FUNCIÓN PARA REEMPLAZAR NOMBRES EN TEXTO
     function procesarTexto(str) {
         return str.replace(/{h}/g, nombreHombre).replace(/{m}/g, nombreMujer);
     }
 
-    // --- VOZ INTELIGENTE ---
     function hablar(item) {
         if (!('speechSynthesis' in window)) return;
         window.speechSynthesis.cancel();
-
         const texto = `${item.t}. ${nombreHombre}: ${item.p.split('.')[0]}. ${nombreMujer}: ${item.f.split('.')[0]}.`;
-        
         const msg = new SpeechSynthesisUtterance(texto);
         msg.lang = 'es-MX';
         msg.rate = 0.9;
         msg.pitch = 0.9;
-        
         window.speechSynthesis.speak(msg);
     }
 
@@ -418,7 +412,8 @@
 
     setModo('escalada', document.querySelector('.nav-item'));
 </script>
-    <script>
+
+<script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('./service-worker.js')
@@ -427,21 +422,6 @@
     });
   }
 </script>
-<!-- CONTENEDOR DE ANUNCIO ADSTERRA -->
-<div style="width: 100%; display: flex; justify-content: center; position: fixed; bottom: 85px; z-index: 99;">
-    <div style="width: 320px; height: 50px; background: #111; border: 1px dashed #333; display: flex; align-items: center; justify-content: center;">
-        <script type="text/javascript">
-            atOptions = {
-                'key' : '79199c2011df26a6fda545b1d27efa07',
-                'format' : 'iframe',
-                'height' : 50,
-                'width' : 320,
-                'params' : {}
-            };
-        </script>
-        <script type="text/javascript" src="//bicea.org/79199c2011df26a6fda545b1d27efa07/invoke.js"></script>
-    </div>
-</div>
 </body>
 </html>
 
