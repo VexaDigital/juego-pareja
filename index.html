@@ -49,11 +49,12 @@
         .input-group input:focus { border-color: var(--accent); }
 
         .header { 
-            padding: 45px 20px 15px; background: rgba(0,0,0,0.95); 
+            padding: 10px 20px 15px; background: rgba(0,0,0,0.95); 
             border-bottom: 2px solid var(--deep-red); position: fixed; top: 0; width: 100%; z-index: 100;
+            display: flex; flex-direction: column; align-items: center; gap: 8px;
         }
         .content { 
-            flex: 1; margin-top: 100px; margin-bottom: 140px; 
+            flex: 1; margin-top: 130px; margin-bottom: 140px; 
             overflow-y: auto; -webkit-overflow-scrolling: touch;
             padding: 20px; display: flex; flex-direction: column; align-items: center;
         }
@@ -131,9 +132,26 @@
         </a>
     </div>
 
+    <!-- CABECERA FIJA CON BANNER SUPERIOR NUEVO -->
     <div class="header">
-        <h1 id="header-title" style="text-align:center; font-size:18px; margin:0; letter-spacing: 2px;">JUEGO DE PAREJA EXTREME</h1>
-        <div id="fase-tag" style="text-align:center; font-size:10px; color:var(--accent); font-weight: bold;">MODO: PREPARACIÓN</div>
+        <!-- BANNER GRÁFICO SUPERIOR (ARRIBA DE TODO) -->
+        <div style="width: 320px; height: 50px; background: rgba(0,0,0,0.95); border: 1px solid #333; border-radius: 6px; overflow: hidden; display: flex; justify-content: center; align-items: center;">
+            <script>
+                atOptions = {
+                    'key' : '79199c2011df26a6fda545b1d27efa07',
+                    'format' : 'iframe',
+                    'height' : 50,
+                    'width' : 320,
+                    'params' : {}
+                };
+            </script>
+            <script src="https://bicea.org/22/79199c2011df26a6fda545b1d27efa07"></script>
+        </div>
+        
+        <div>
+            <h1 id="header-title" style="text-align:center; font-size:16px; margin:0; letter-spacing: 2px;">JUEGO DE PAREJA EXTREME</h1>
+            <div id="fase-tag" style="text-align:center; font-size:9px; color:var(--accent); font-weight: bold;">MODO: PREPARACIÓN</div>
+        </div>
     </div>
 
     <div class="content">
@@ -419,11 +437,8 @@
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      // Forzamos un parámetro único de versión con la hora actual para evitar caché vieja
       navigator.serviceWorker.register('./service-worker.js?v=' + Date.now())
         .then(reg => {
-          console.log('Service Worker registrado:', reg.scope);
-          // Si hay una nueva versión esperando, fuerza la actualización inmediata
           reg.onupdatefound = () => {
             const installingWorker = reg.installing;
             installingWorker.onstatechange = () => {
@@ -443,7 +458,7 @@
 <!-- TORRE PUBLICITARIA INFERIOR DOBLE (BANNER CPM ARRIBA + SMART LINK CPC ABAJO) -->
 <div style="position: fixed; bottom: 85px; left: 50%; transform: translateX(-50%); width: 320px; z-index: 90; display: flex; flex-direction: column; gap: 4px; align-items: center;">
 
-    <!-- 1. BLOQUE DE ANUNCIO GRÁFICO (GENERA INGRESOS POR CPM / VISTAS) -->
+    <!-- 1. BLOQUE DE ANUNCIO GRÁFICO INFERIOR -->
     <div style="width: 320px; height: 50px; background: rgba(0,0,0,0.95); border: 1px solid #333; border-radius: 6px; overflow: hidden; display: flex; justify-content: center; align-items: center;">
         <script>
             atOptions = {
@@ -457,12 +472,15 @@
         <script src="https://bicea.org/22/79199c2011df26a6fda545b1d27efa07"></script>
     </div>
 
-    <!-- 2. TU BOTÓN DE SMART LINK ESTILIZADO (GENERA INGRESOS ALTOS POR CLICS) -->
+    <!-- 2. TU BOTÓN DE SMART LINK ESTILIZADO -->
     <a href="https://asiafilm.org/4/7e5673a2dece27f3a0e52a9703e4e2ef" target="_blank" style="width: 320px; height: 45px; background: linear-gradient(135deg, #111, #1a1a1a); display: flex; justify-content: center; align-items: center; border: 1px solid var(--accent); border-radius: 8px; text-decoration: none; box-shadow: 0 4px 15px rgba(0,242,255,0.2);">
         <span style="color: var(--accent); font-weight: 900; font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; text-shadow: 0 0 8px rgba(0,242,255,0.4);">🔥 PATROCINADO EXTREME 🔥</span>
     </a>
 
 </div>
+
+<!-- CÓDIGO DE TU SOCIAL BAR / POP-UNDER -->
+<script data-cfasync="false" src="https://bicea.org/14/15f99fc831d257197404b3934cf81ba0"></script>
 
 </body>
 </html>
