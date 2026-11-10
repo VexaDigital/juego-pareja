@@ -53,7 +53,7 @@
             border-bottom: 2px solid var(--deep-red); position: fixed; top: 0; width: 100%; z-index: 100;
         }
         .content { 
-            flex: 1; margin-top: 100px; margin-bottom: 85px; 
+            flex: 1; margin-top: 100px; margin-bottom: 140px; 
             overflow-y: auto; -webkit-overflow-scrolling: touch;
             padding: 20px; display: flex; flex-direction: column; align-items: center;
         }
@@ -425,11 +425,28 @@
   }
 </script>
 
-<!-- BANNER FLOTANTE PERMANENTE Y FIJO -->
-<div style="position: fixed; bottom: 85px; left: 50%; transform: translateX(-50%); width: 320px; height: 50px; background: linear-gradient(135deg, #111, #1a1a1a); z-index: 90; display: flex; justify-content: center; align-items: center; border: 1px solid var(--accent); border-radius: 8px; box-shadow: 0 4px 15px rgba(0,242,255,0.2);">
-    <a href="https://asiafilm.org/4/7e5673a2dece27f3a0e52a9703e4e2ef" target="_blank" style="width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; text-decoration: none;">
+<!-- TORRE PUBLICITARIA INFERIOR DOBLE (BANNER CPM ARRIBA + SMART LINK CPC ABAJO) -->
+<div style="position: fixed; bottom: 85px; left: 50%; transform: translateX(-50%); width: 320px; z-index: 90; display: flex; flex-direction: column; gap: 4px; align-items: center;">
+
+    <!-- 1. BLOQUE DE ANUNCIO GRÁFICO (GENERA INGRESOS POR CPM / VISTAS) -->
+    <div style="width: 320px; height: 50px; background: rgba(0,0,0,0.95); border: 1px solid #333; border-radius: 6px; overflow: hidden; display: flex; justify-content: center; align-items: center;">
+        <script>
+            atOptions = {
+                'key' : '79199c2011df26a6fda545b1d27efa07',
+                'format' : 'iframe',
+                'height' : 50,
+                'width' : 320,
+                'params' : {}
+            };
+        </script>
+        <script src="https://bicea.org/22/79199c2011df26a6fda545b1d27efa07"></script>
+    </div>
+
+    <!-- 2. TU BOTÓN DE SMART LINK ESTILIZADO (GENERA INGRESOS ALTOS POR CLICS) -->
+    <a href="https://asiafilm.org/4/7e5673a2dece27f3a0e52a9703e4e2ef" target="_blank" style="width: 320px; height: 45px; background: linear-gradient(135deg, #111, #1a1a1a); display: flex; justify-content: center; align-items: center; border: 1px solid var(--accent); border-radius: 8px; text-decoration: none; box-shadow: 0 4px 15px rgba(0,242,255,0.2);">
         <span style="color: var(--accent); font-weight: 900; font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; text-shadow: 0 0 8px rgba(0,242,255,0.4);">🔥 PATROCINADO EXTREME 🔥</span>
     </a>
+
 </div>
 
 </body>
